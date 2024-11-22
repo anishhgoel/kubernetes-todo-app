@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <script>
+        async function addTask() {
+            const task = document.getElementById("taskInput").value;
+            const response = await fetch("/tasks", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ task })
+            });
+            if (response.ok) {
+                location.reload();
+            }
+        }
+
+        async function loadTasks() {
+            const response = await fetch("/tasks");
+            const tasks = await response.json();
+            const taskList = document.getElementById("taskList");
+            tasks.forEach(task => {
+                const li = document.createElement("li");
+                li.textContent = task[1];
+                taskList.appendChild(li);
+            });
+        }
+
+        window.onload = loadTasks;
+    </script>
+</head>
+<body>
+    <h1>Todo App</h1>
+    <input type="text" id="taskInput" placeholder="Enter task" />
+    <button onclick="addTask()">Add Task</button>
+    <ul id="taskList"></ul>
+</body>
+</html>
